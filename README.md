@@ -46,7 +46,7 @@ have chosen Jenkins V2 Pipelines.
 The Artifactory account credential is in the `settings.xml` file. The AWS keys for
 AWS ECR access are also needed in the user's environment. Those credentials have been sent separately.
 
-    _Note: I can provide console access to the account if you want it._
+ *Note: I can provide console access to the account if you want it.*
 
 One last thing on the build side... AWS provides a CLI that will give you the docker
 login command string. The bad part is that docker login messes up the entry it makes
@@ -106,4 +106,5 @@ Look at `ansible.sh`
 ## Questions
 
 Wow, that's a pile of stuff! :-)
+
 I'll take questions now...
