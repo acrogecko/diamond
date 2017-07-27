@@ -37,16 +37,16 @@ have chosen Jenkins V2 Pipelines.
 
 ## Developer Requirements
 
-* Maven 3.3+ (with settings.xml in developer's ~/.m2 directory)
+* Maven 3.3+ (with `settings.xml` in developer's ```~/.m2``` directory)
 * Docker recent (with daemon running)
 * Ansible recent
 * Git
 * AWS CLI
 
-The Artifactory account credential is in the settings.xml file. The AWS keys for
+The Artifactory account credential is in the `settings.xml` file. The AWS keys for
 AWS ECR access are also needed in the user's environment. Those credentials have been sent separately.
 
-Note: I can provide console access to the account if you want it.
+    _Note: I can provide console access to the account if you want it._
 
 One last thing on the build side... AWS provides a CLI that will give you the docker
 login command string. The bad part is that docker login messes up the entry it makes
@@ -59,6 +59,7 @@ correct the the docker credential entry:
 eval $(aws ecr get-login --no-include-email --region us-west-2)
 sed -E -i.bak 's#[0-9]{12}[.]dkr[.]ecr[.]#https://&#' ~/.docker/config.json
 ```
+## Run the pipeline
 
 ### Build
 
