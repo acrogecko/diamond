@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -ex
+
+# Generate Diamond.conf
+dmd_init
+
+#dmd_blockchain
+
+#dmd_wallet
+
+if [ $# -gt 0 ]; then
+    args=("$@")
+else
+    args=("-rpcallowip=::/0")
+fi
+
+exec diamondd "${args[@]}"

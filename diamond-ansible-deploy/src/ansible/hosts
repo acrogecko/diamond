@@ -1,0 +1,2 @@
+[dmd_daemons]
+diamondd ansible_host=admin ansible_host=54.186.228.255

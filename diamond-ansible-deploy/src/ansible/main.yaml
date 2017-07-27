@@ -1,0 +1,101 @@
+---
+- hosts: dmd_daemons
+  vars:
+    docker_registry: "498316857260.dkr.ecr.us-west-2.amazonaws.com"
+    aws_ecr_region: "us-west-2"
+    docker_repo: "diamond-docker"
+    docker_tag: "${project.version}"
+  environment:
+    PYTHONPATH: "{{ lookup('env','PYTHONPATH') }}:/usr/lib/python2.7/dist-packages:/usr/lib/python2.7/site-packages"
+  remote_user: admin
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Remove old docker packages
+      apt: name={{ item }} state=absent
+      with_items:
+        - docker
+        - docker-engine
+        - docker.io
+
+    - name: Update package index
+      apt:
+        update_cache: yes
+  
+    - name: Install packages to allow apt to use a repository over HTTPS
+      apt: name={{ item }} state=present
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg2
+        - software-properties-common
+     
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+        state: present
+#        id: 0x0EBFCD88
+
+    - name: Setup Docker repo
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/debian jessie stable"
+        state: present
+   
+    - name: Install Docker CE
+      apt:
+        update_cache: yes
+        name: docker-ce
+        state: present
+
+    - name: Install pip
+      apt:
+        name: python-pip
+        state: present
+        
+    - name: Install AWS CLI
+      pip:
+        name: awscli
+        state: present
+
+    - name: Install old python docker API
+      pip:
+        name: docker-py
+        state: present
+
+#    - name: Install python docker API
+#      pip:
+#        name: docker
+#        state: forcereinstall
+  
+    - name: Verify that Docker CE is installed correctly
+      docker_container: 
+        name: hello
+        image: hello-world
+  
+    - name: Create volume to persist the diamondd blockchain data
+      docker_container:
+        name: diamondd-data
+        image: busybox
+        volumes:
+          - /diamond
+        command: ["chown", "1000:1000", "/diamond"]
+        
+    - name: Get the Docker registry login command and login
+      shell: "eval $(aws ecr get-login --no-include-email --region {{ aws_ecr_region }})"
+        
+    - name: Edit Docker config to work around remote registry credential bug
+      shell: "sed -E -i.bak 's#[0-9]{12}[.]dkr[.]ecr[.]#https://&#' ~/.docker/config.json"
+    
+    - name: Start the coin daemon
+      docker_container:
+        name: diamondd-node
+        image: "{{ docker_registry }}/{{ docker_repo }}:{{ docker_tag }}"
+        state: started
+        volumes_from:
+          - diamondd-data
+        ports:
+         - "17772:17772"
+         - "127.0.0.1:17771:17771"
+

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -ex
+
+# This shouldn't be in the Dockerfile or containers built from the same image
+# will have the same credentials.
+
+if [ ! -e "$HOME/.Diamond/blkindex.dat" ]; then
+    echo "Update docker-diamondd container with current blockchain data"
+    cp data/blockchain/blk0001.dat $HOME/.Diamond/blk0001.dat
+    cp data/blockchain/blkindex.dat $HOME/.Diamond/blkindex.dat
+    cp -rf data/blockchain/database $HOME/.Diamond/database
+
+echo "Blockchain data has been updated successfully"

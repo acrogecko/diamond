@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -ex
+
+# This shouldn't be in the Dockerfile or containers built from the same image
+# will have the same credentials.
+
+if [ ! -e "$HOME/.Diamond/wallet.dat" ]; then
+    echo "Upload diamond user-defined wallet to docker-diamondd container"
+    cp data/wallet/wallet.dat $HOME/.Diamond/wallet.dat
+
+echo "Diamond user-defined wallet has been uploaded successfully"
