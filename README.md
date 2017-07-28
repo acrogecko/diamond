@@ -32,8 +32,8 @@ pipeline. So, the developer uses Maven for building deployment artifacts (includ
 the Docker image) and Ansible is used for the host configuration and application
 deployment. The Maven artifacts are registered to a JFrog Artifactory Cloud instance
 and the Docker images ended up in an AWS ECS (Docker) registry. I would likely move
-the Docker registry to Artifactory as well. For end-to-end orchestration, I would likely
-have chosen Jenkins V2 Pipelines.
+the Docker registry to Artifactory as well. For end-to-end orchestration, I would
+have chosen Jenkins V2 (using Pipeline).
 
 ## Developer Requirements
 
@@ -46,7 +46,7 @@ have chosen Jenkins V2 Pipelines.
 The Artifactory account credential is in the `settings.xml` file. The AWS keys for
 AWS ECR access are also needed in the user's environment. Those credentials have been sent separately.
 
- *Note: I can provide console access to the account if you want it.*
+   *Note: I can provide console access to the account if you want it.*
 
 One last thing on the build side... AWS provides a CLI that will give you the docker
 login command string. The bad part is that docker login messes up the entry it makes
@@ -59,6 +59,7 @@ correct the the docker credential entry:
 eval $(aws ecr get-login --no-include-email --region us-west-2)
 sed -E -i.bak 's#[0-9]{12}[.]dkr[.]ecr[.]#https://&#' ~/.docker/config.json
 ```
+
 ## Run the pipeline
 
 ### Build
@@ -77,11 +78,11 @@ I used the AWS EC2 console to launch an instance:
 * t2.large (2 core, 16GB RAM)
 * assigned a public IP
 * with a role that has permissions for writing in the ECS registry
--- used AWS managed policy, AmazonEC2ContainerRegistryPowerUser
+    - used AWS managed policy, AmazonEC2ContainerRegistryPowerUser
 * 50 GB storage
 * security group allowing:
--- inbound access for TCP port 22 (my IP only) and TCP port 17772
--- outbound access to anywhere
+    - inbound access for TCP port 22 (my IP only) and possibly TCP port 17772 (I'm not doing it)
+    - outbound access to anywhere
 * SSH key-pair (you will need the secret key)
   
 ### Configure host and install container
@@ -100,7 +101,7 @@ Unzip the artifact.
 Edit `hosts` and put in the correct host IP.
 
 Look at `ansible.sh` 
-- Run the first command (with the proper keypair file path) to see if Ansible is happy.
+- You may run the first command (with the proper keypair file path) to see if Ansible is happy.
 - Run the second command (with the proper keypair file path) to deploy the coin daemon.
   
 ## Questions
