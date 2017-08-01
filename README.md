@@ -26,21 +26,23 @@ I chose Diamond `DMDcoin` because there was some existing work on dockerizing th
 a starting point... Chasing and working around several bugs burned a
 lot of time that could have gone toward experimenting with other coin daemons.
 Currently, the Docker build in this repository clones the original coin daemon
-source code from another repo. I would expect to use a direct fork of the deamon
+source code from another repo. I would expect to use a direct fork of the coin daemon
 code into this project's sources if I do further work on it.
 
 I used components that I knew would fit into a CD pipeline but didn't provide the
 pipeline orchestration. So, the developer uses Maven for building the versioned
 artifacts (e.g. application components and deployment packages). In this project,
-the Docker image is one of the Maven artifacts. The Maven artifacts are registered
-in a JFrog Artifactory Cloud instance and the Docker image ends up in an AWS ECS
-(Docker) registry. I would likely move the Docker registry to Artifactory as well
-to put all production artifacts in the same place (and using the same auth/e/o).
+the Docker image is one of the Maven artifacts. The Docker image ends up in an AWS ECS
+(Docker) registry while the rest of the Maven artifacts are registered
+in Maven repository hosted in a JFrog Artifactory Cloud instance.
+I would likely move the Docker registry to Artifactory as well (it provides a Docker
+registry service) to put all production artifacts in the same place (and using
+the same auth/e/o).
 
 The deployment artifact (diamond-ansible-deploy) contains the commands and 
 Ansible configuration to setup the host and install/run the application container.
 For what it's worth, when using an end-to-end orchestration system (i.e. Jenkins V2
-using Pipeline), both Maven and Ansible would be invoked from the pipeline.
+using Pipeline), Git, Maven, and Ansible would be invoked from the pipeline.
 
 ## Developer Requirements
 
