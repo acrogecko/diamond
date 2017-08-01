@@ -20,20 +20,27 @@ Write	an	Ansible	playbook	that	builds	and	runs	a	Docker	container	for	a	coin	dae
 
 ## Approach
 
-Time to turn something in, although I could gold-plate the heck out of this...
+Time to turn something in...
 
 I chose Diamond `DMDcoin` because there was some existing work on dockerizing the build. It was
-a starting point... I had also expected to switch over to `litecoin` to get a smaller
-blockchain and quicker initialization. Chasing and working around several bugs burned a
-lot of time that could have gone to that.
+a starting point... Chasing and working around several bugs burned a
+lot of time that could have gone toward experimenting with other coin daemons.
+Currently, the Docker build in this repository clones the original coin daemon
+source code from another repo. I would expect to use a direct fork of the deamon
+code into this project's sources if I do further work on it.
 
 I used components that I knew would fit into a CD pipeline but didn't provide the
-pipeline. So, the developer uses Maven for building deployment artifacts (including
-the Docker image) and Ansible is used for the host configuration and application
-deployment. The Maven artifacts are registered to a JFrog Artifactory Cloud instance
-and the Docker images ended up in an AWS ECS (Docker) registry. I would likely move
-the Docker registry to Artifactory as well. For end-to-end orchestration, I would
-have chosen Jenkins V2 (using Pipeline).
+pipeline orchestration. So, the developer uses Maven for building the versioned
+artifacts (e.g. application components and deployment packages). In this project,
+the Docker image is one of the Maven artifacts. The Maven artifacts are registered
+in a JFrog Artifactory Cloud instance and the Docker image ends up in an AWS ECS
+(Docker) registry. I would likely move the Docker registry to Artifactory as well
+to put all production artifacts in the same place (and using the same auth/e/o).
+
+The deployment artifact (diamond-ansible-deploy) contains the commands and 
+Ansible configuration to setup the host and install/run the application container.
+For what it's worth, when using an end-to-end orchestration system (i.e. Jenkins V2
+using Pipeline), both Maven and Ansible would be invoked from the pipeline.
 
 ## Developer Requirements
 
