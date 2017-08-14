@@ -9,4 +9,4 @@ ansible dmd_daemons -i hosts --private-key=KeyPair.pem -u admin -m ping
 
 # Run the project playbook
 #
-ansible-playbook main.yaml -i ./hosts --private-key=KeyPair.pem -u admin --extra-vars "docker_tag=${project.version}"
+ansible-playbook playbook.yml -i ./hosts --private-key=KeyPair.pem -u admin --extra-vars "docker_tag=${project.version}"

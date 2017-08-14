@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>diamondd</module>
         <module>diamond-docker</module>
         <module>diamond-ansible-deploy</module>
     </modules>

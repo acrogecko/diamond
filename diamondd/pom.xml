@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>meine.challenge</groupId>
+    <artifactId>diamond-parent</artifactId>
+    <version>1.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>diamondd</artifactId>
+  <packaging>nar</packaging>
+  <name>Diamond (DMD) coin daemon, UI, and tools</name>
+
+  <description>
+    Build of GNU-style C++ project
+  </description>
+
+  <properties>
+    <skipTests>true</skipTests>
+  </properties>
+
+  <build>
+    <defaultGoal>integration-test</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>com.github.maven-nar</groupId>
+        <artifactId>nar-maven-plugin</artifactId>
+        <version>3.5.2</version>
+        <extensions>true</extensions>
+        <configuration>
+          <gnuSourceDirectory>DMDv3</gnuSourceDirectory>
+          <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

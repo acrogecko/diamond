@@ -24,28 +24,15 @@ ENV HOME /diamond
 RUN groupadd -r diamond && useradd --no-log-init -r -s /bin/bash -m -d /diamond -g diamond diamond
 RUN chown diamond:diamond -R /diamond
 
-# Pick up the maintenance scripts
+# Pick up executables (binaries and scripts)
 #
-COPY ./src/bin /usr/local/bin
+COPY ./target/nar/*/bin/*/* /usr/local/bin/
+COPY ./src/bin /usr/local/bin/
 RUN chmod a+x /usr/local/bin/*
-
-# Get the additional source
-#
-WORKDIR /diamond
-RUN git clone https://github.com/DMDcoin/diamond.git app && mkdir -p app/src/obj
-
-# Build the daemon
-#
-WORKDIR /diamond/app/src
-RUN make -f makefile.unix USE_UPNP=- -e PIE=1 && cp diamondd /usr/local/bin
-
-# Cleanup
-#
-WORKDIR /diamond
-RUN rm -rf app
 
 # Ready to run
 #
 EXPOSE 17771 17772
 USER diamond
-CMD ["dmd_oneshot"]
+WORKDIR /diamond
+CMD ["/usr/local/bin/dmd_oneshot"]

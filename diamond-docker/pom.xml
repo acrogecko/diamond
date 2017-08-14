@@ -13,9 +13,33 @@
     <properties>
         <docker-repo>${docker-registry}/${project.artifactId}</docker-repo>
     </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>meine.challenge</groupId>
+            <artifactId>diamondd</artifactId>
+            <version>${project.version}</version>
+            <type>nar</type>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.github.maven-nar</groupId>
+                <artifactId>nar-maven-plugin</artifactId>
+                <version>3.5.2</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>nar-unpack-dependencies</id>
+                        <goals>
+                            <goal>nar-unpack-dependencies</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
