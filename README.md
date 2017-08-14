@@ -23,11 +23,13 @@ Write	an	Ansible	playbook	that	builds	and	runs	a	Docker	container	for	a	coin	dae
 Time to turn something in...
 
 I chose Diamond `DMDcoin` because there was some existing work on dockerizing the build. It was
-a starting point... Chasing and working around several bugs burned a
+a starting point that I didn't use much of in the end... Chasing and working around several bugs burned a
 lot of time that could have gone toward experimenting with other coin daemons.
-Currently, the Docker build in this repository clones the original coin daemon
-source code from another repo. I would expect to use a direct fork of the coin daemon
-code into this project's sources if I do further work on it.
+
+Normally the CI/CD orchestration (or developer IDE) picks up the sources for the build
+but the source code in this case is coming from another GitHub project
+([LIMXTEC/DMDv3](https://github.com/LIMXTEC/DMDv3)).
+I didn't want to fork the source into this project for now and so made it a Git submodule.
 
 I used components that I knew would fit into a CD pipeline but didn't provide the
 pipeline orchestration. So, the developer uses Maven for building the versioned
@@ -74,8 +76,10 @@ sed -E -i.bak 's#[0-9]{12}[.]dkr[.]ecr[.]#https://&#' ~/.docker/config.json
 ### Build
 
 ```bash
-cd /to/the/top/of/the/repo/clone
-mvn -B -U clean deploy
+## Use --recursive to also retrieve the coin daemon source submodule
+git clone --recursive https://github.com/acrogecko/diamond.git /the/repo/clone
+cd /the/repo/clone
+mvn clean deploy
 ```
 
 ### Get host instance
