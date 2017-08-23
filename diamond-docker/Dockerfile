@@ -1,7 +1,5 @@
 FROM debian:jessie
 
-ENV DEBIAN_FRONTEND noninteractive
-
 # Set the timezone
 #
 RUN echo "America/Denver" > /etc/timezone \
@@ -21,7 +19,8 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/s
 # Create the daemon user
 #
 ENV HOME /diamond
-RUN groupadd -r diamond && useradd --no-log-init -r -s /bin/bash -m -d /diamond -g diamond diamond
+RUN groupadd -r diamond \
+ && useradd --no-log-init -r -s /bin/bash -m -d /diamond -g diamond diamond
 RUN chown diamond:diamond -R /diamond
 
 # Pick up executables (binaries and scripts)
